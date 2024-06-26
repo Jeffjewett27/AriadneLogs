@@ -1,0 +1,5 @@
+dataset/
+.vscode
+.env
+public/
+__pycache__/
