@@ -256,7 +256,7 @@ def generate_entity_annotations(room_file: str, frame_fetcher: UnityFrames, cate
 
     for timestep, timestamp, camera, entities in generate_time_snapshots(camera_df, entities_df, info):
         
-        frame_path, frame = frame_fetcher.get_frame(timestep, timestamp)
+        frame_path, frame = frame_fetcher.get_frame(timestep)
         if frame_path is None:
             # frame was not found in the logs
             continue
@@ -383,8 +383,11 @@ def process_ariadne_logs(log_dir, dataset_dir):
     """
     log_files = list_log_files(log_dir)
 
-    partials = os.listdir(f'{dataset_dir}/annotations/partial')
-    already_processed = set(partials)
+    already_processed = set()
+    partial_path = f'{dataset_dir}/annotations/partial'
+    if os.path.exists(partial_path):
+        partials = os.listdir(partial_path)
+        already_processed = set(partials)
 
     for room_file in log_files:
         if os.path.basename(room_file) in already_processed:
@@ -456,8 +459,8 @@ def train_test_or_validate(file_name):
     
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument('logdir', type=str, required=True, help="The directory of the Ariadne logs")
-    parser.add_argument('--dataset', default='dataset', type=str, required=False, help="The output dataset directory")
+    parser.add_argument('logdir', type=str, help="The directory of the Ariadne logs")
+    parser.add_argument('--dataset', '-d', default='dataset', type=str, required=False, help="The output dataset directory")
     config = parser.parse_args()
 
     process_ariadne_logs(config.logdir, config.dataset)

@@ -1,5 +1,6 @@
 # from https://gradiant.github.io/pyodi/reference/apps/coco-merge/
 
+from argparse import ArgumentParser
 import json
 import os
 from datetime import datetime
@@ -149,10 +150,8 @@ def merge_partials(to_coco_file, partial_dir):
         json.dump(merged_coco, f, indent=2)
 
 if __name__ == "__main__":
-    # coco1 = 'dataset/annotations/partial/data_Crossroads_03_46303885.json'
-    # coco2 = 'dataset/annotations/partial/data_Crossroads_08_46303831.json'
-    # coco3 = 'dataset/annotations/partial/data_Crossroads_13_46303836.json'
-    # output = 'dataset/annotations/combined.json'
-    # coco_merge(coco1, [coco2, coco3], output, 2)
-    dataset_dir = 'dataset'
-    merge_partials(f'{dataset_dir}/annotations/labels.json', f'{dataset_dir}/annotations/partial')
+    parser = ArgumentParser()
+    parser.add_argument('--dataset', '-d', default='dataset', type=str, required=False, help="The output dataset directory")
+    config = parser.parse_args()
+    
+    merge_partials(f'{config.dataset}/annotations/labels.json', f'{config.dataset}/annotations/partial')
